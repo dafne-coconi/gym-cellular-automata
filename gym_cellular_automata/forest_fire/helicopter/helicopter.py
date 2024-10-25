@@ -64,9 +64,9 @@ class ForestFireHelicopterEnv(CAEnv):
 
         self._n_actions = len(actions)
 
-        self._reward_per_empty = 0.0
-        self._reward_per_tree = 1.0
-        self._reward_per_fire = -1.0
+        self._reward_per_empty = kwargs.get("reward_per_empty",0.0)
+        self._reward_per_tree = kwargs.get("reward_per_tree", 1.0)
+        self._reward_per_fire = kwargs.get("reward_per_fire", -1.0)
 
         # Cells
         self._empty = 0
@@ -75,8 +75,8 @@ class ForestFireHelicopterEnv(CAEnv):
 
         # Env Behavior Parameters
 
-        self._p_fire = 0.033
-        self._p_tree = 0.333
+        self._p_fire = kwargs.get("p_fire", 0.033)
+        self._p_tree = kwargs.get("p_tree", 0.333)
 
         self._effects = {self._fire: self._empty}
 
