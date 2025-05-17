@@ -35,21 +35,28 @@ class ForestFire(Operator):
                     # Burn tree to the ground
                     new_grid[row][col] = self.fire
 
-                elif cell == self.tree:
+                #elif cell == self.tree:
                     # Sample for lightning strike
-                    strike = self.np_random.choice(
-                        [True, False], p=[p_fire, 1 - p_fire]
-                    )
+                 #   strike = self.np_random.choice(
+                  #      [True, False], p=[p_fire, 1 - p_fire]
+                   # )
 
-                    new_grid[row][col] = self.fire if strike else cell
+               #     new_grid[row][col] = self.fire if strike else cell
 
-                elif cell == self.empty:
+                #start of fire
+                elif cell == self.tree:
+                     #Sample for starting fire
+                    strike = 1
+
+                    new_grid[row][col] = self.fire if (row < 10 and row > 5 and col < 10 and col < 5) else cell
+
+                #elif cell == self.empty:
                     # Sample to grow a tree
-                    growth = self.np_random.choice(
-                        [True, False], p=[p_tree, 1 - p_tree]
-                    )
+                 #   growth = self.np_random.choice(
+                  #      [True, False], p=[p_tree, 1 - p_tree]
+                   # )
 
-                    new_grid[row][col] = self.tree if growth else cell
+                    #new_grid[row][col] = self.tree if growth else cell
 
                 elif cell == self.fire:
                     # Consume fire

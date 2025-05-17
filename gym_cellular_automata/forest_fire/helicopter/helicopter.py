@@ -76,7 +76,7 @@ class ForestFireHelicopterEnv(CAEnv):
         # Env Behavior Parameters
 
         self._p_fire = kwargs.get("p_fire", 0.033)
-        self._p_tree = kwargs.get("p_tree", 0.333)
+        self._p_tree = kwargs.get("p_tree", 0.033)
 
         self._effects = {self._fire: self._empty}
 
@@ -219,7 +219,7 @@ class MDP(Operator):
 
         if freeze == 0:
             grid, ca_params = self.ca(grid, None, ca_params)
-            grid, position = self.move_modify(grid, (action, True), position)
+            #grid, position = self.move_modify(grid, (action, True), position)
 
             freeze = np.array(self.max_freeze)
 

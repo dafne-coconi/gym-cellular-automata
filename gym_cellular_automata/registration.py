@@ -13,7 +13,7 @@ FFDIR = "gym_cellular_automata.forest_fire"
 
 LIBRARY = "gym_cellular_automata"
 
-prototypes = (ForestFireHelicopterEnv, ForestFireBulldozerEnv)
+prototypes = (ForestFireHelicopterEnv, ForestFireBulldozerEnv, ForestFireSarsaEnv)
 
 
 HELR, HELC = 5, 5
@@ -35,6 +35,14 @@ REGISTERED_CA_ENVS = {
     + "-v3": {
         "kwargs": {"nrows": BULR, "ncols": BULC},
         "entry_point": FFDIR + ".bulldozer:ForestFireBulldozerEnv",
+    },
+    "ForestFireSarsa"
+    + str(SARS)
+    + "x"
+    + str(SARS)
+    + "-v1": {
+        "kwargs": {"nrows": SARS, "ncols": SARS},
+        "entry_point": FFDIR + ".sarsa:ForestFireSarsaEnv",
     },
 }
 

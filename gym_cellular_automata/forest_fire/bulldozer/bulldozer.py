@@ -41,8 +41,8 @@ class ForestFireBulldozerEnv(CAEnv):
         self,
         nrows,
         ncols,
-        speed_move=0.12,
-        speed_act=0.03,
+        speed_move=0.12, # 0.12
+        speed_act=0.03,  # 0.03
         pos_bull: Optional[Tuple] = None,
         pos_fire: Optional[Tuple] = None,
         t_move: Optional[float] = None,

@@ -49,7 +49,8 @@ class GridSpace(Space):
             raise ValueError("'n' or 'values' must be provided.")
 
         uniform = np.repeat(1.0, self.n) / self.n
-        self.probs = uniform if probs is None else probs
+        #self.probs = uniform if probs is None else probs
+        self.probs = np.array([0.2, 0.76, 0.04])
 
         assert len(self.values) == len(
             self.probs

@@ -89,7 +89,7 @@ class Modify(Operator):
         if action:
             if grid[row, col] in self.effects:
                 grid[row, col] = self.effects[grid[row, col]]
-                self.hit = True
+                self.hit = False
 
         return grid, context
 
