@@ -9,7 +9,7 @@ from gymnasium.utils import seeding
 class CAEnv(ABC, gym.Env):
     @property
     @abstractmethod
-    def MDP(self):
+    def SARS(self):
         raise NotImplementedError
 
     @property
@@ -27,18 +27,27 @@ class CAEnv(ABC, gym.Env):
     def step(self, action):
         if not self.done:
             # MDP Transition
+            """ 
             self.state = self.grid, self.context = self.MDP(
                 self.grid, action, self.context
             )
-
+            """
+            # SARSA Transition
+            self.state = self.grid, self.context = self.SARS(
+                self.grid, action, self.context
+            )
+            
             # Check for termination
-            self._is_done()
+            terminated = self._is_done()
+            
+            # Check truncation
+            truncated = self._is_burned()
 
             # Gym API Formatting
             obs = self.state
             reward = self._award()
-            terminated = self.done
-            truncated = False
+            #terminated = self.done
+            #truncated = False
             info = self._report()
 
             # Status method
@@ -85,6 +94,10 @@ class CAEnv(ABC, gym.Env):
 
     @abstractmethod
     def _is_done(self):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def _is_burned(self):
         raise NotImplementedError
 
     @abstractmethod

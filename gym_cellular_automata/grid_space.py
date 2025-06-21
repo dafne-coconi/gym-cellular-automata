@@ -50,7 +50,7 @@ class GridSpace(Space):
 
         uniform = np.repeat(1.0, self.n) / self.n
         #self.probs = uniform if probs is None else probs
-        self.probs = np.array([0.2, 0.76, 0.04])
+        self.probs = np.array([0.23, 0.76, 0.01])
 
         assert len(self.values) == len(
             self.probs
@@ -62,6 +62,16 @@ class GridSpace(Space):
         return self.np_random.choice(
             a=self.values, size=self.size, p=self.probs
         ).reshape(self.shape)
+        
+    def sample_det(self) -> np.ndarray:
+        initial_g = self.np_random.choice(
+            a=[0,1], size=self.size, p=[0.2,0.8]
+        ).reshape(self.shape)
+        i_r = int(np.random.choice(self.shape[0],1))
+        i_c = int(np.random.choice(self.shape[1],1))
+        #initial_g[i_r,i_c] = 2
+        initial_g[7,5] = 2
+        return initial_g
 
     def contains(self, x) -> bool:
         if isinstance(x, list):

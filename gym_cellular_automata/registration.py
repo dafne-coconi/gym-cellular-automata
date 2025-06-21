@@ -6,6 +6,7 @@ from numpy.typing import NDArray
 
 from gym_cellular_automata.forest_fire.bulldozer import ForestFireBulldozerEnv
 from gym_cellular_automata.forest_fire.helicopter import ForestFireHelicopterEnv
+from gym_cellular_automata.forest_fire.sarsa import ForestFireSarsaEnv 
 from gym_cellular_automata.grid_space import GridSpace
 
 FFDIR = "gym_cellular_automata.forest_fire"
@@ -18,6 +19,7 @@ prototypes = (ForestFireHelicopterEnv, ForestFireBulldozerEnv, ForestFireSarsaEn
 
 HELR, HELC = 5, 5
 BULR, BULC = 256, 256
+SARR, SARC = 5, 5
 
 REGISTERED_CA_ENVS = {
     "ForestFireHelicopter"
@@ -37,11 +39,11 @@ REGISTERED_CA_ENVS = {
         "entry_point": FFDIR + ".bulldozer:ForestFireBulldozerEnv",
     },
     "ForestFireSarsa"
-    + str(SARS)
+    + str(SARR)
     + "x"
-    + str(SARS)
+    + str(SARC)
     + "-v1": {
-        "kwargs": {"nrows": SARS, "ncols": SARS},
+        "kwargs": {"nrows": SARR, "ncols": SARC},
         "entry_point": FFDIR + ".sarsa:ForestFireSarsaEnv",
     },
 }

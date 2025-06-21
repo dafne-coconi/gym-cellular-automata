@@ -129,6 +129,6 @@ class MoveModify(Operator):
         move_action, modify_action = subactions
 
         grid, position = self.move(grid, move_action, position)
-        grid, position = self.modify(grid, modify_action, position)
+        #grid, position = self.modify(grid, modify_action, position)
 
         return grid, position

@@ -45,10 +45,13 @@ class ForestFire(Operator):
 
                 #start of fire
                 elif cell == self.tree:
-                     #Sample for starting fire
-                    strike = 1
+                    #Sample for starting fire
+                    strike = self.np_random.choice(
+                        [True, False], p=[p_fire, 1 - p_fire]
+                    )
 
-                    new_grid[row][col] = self.fire if (row < 10 and row > 5 and col < 10 and col < 5) else cell
+                    #new_grid[row][col] = self.fire if (row < 10 and row > 5 and col < 10 and col < 5) and strike else cell
+                    #removed the random strike
 
                 #elif cell == self.empty:
                     # Sample to grow a tree
