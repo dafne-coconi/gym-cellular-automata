@@ -18,7 +18,9 @@ print(env._reward_per_move)
 
 
 
-episodes=300
+episodes=400
+ep_steps = []
+
 alpha=0.5
 gamma=0.8
 epsilon=0.1
@@ -34,19 +36,18 @@ def choose_action_greedy(state):
         return np.random.randint(n_actions)
     return np.argmax(Q[state[0]][state[1]])
 
+obs, info = env.reset()
 # Random Policy for at most "threshold" steps
 for episode in range(episodes):
-    if episode//100 == int:
-        print(episode)
-    obs, info = env.reset()
-    #print(obs)
+    print(episode)
+    obs, info = env.reset_same_env()
     state_Q = obs[1][1]
 
     action_num = choose_action_greedy(state_Q)
     total_reward = 0.0
     done = False
     step = 0
-    threshold = 100
+    threshold = 300
     
     data = []
     while not done and step < threshold:
@@ -74,6 +75,12 @@ for episode in range(episodes):
         #print(data[step])
         total_reward += reward
         step += 1
+        ep_steps.append(episode)
+        
+        if done or step >= threshold:
+            print(f"truncated {truncated} or terminated {terminated}")
+            print(f'total reward {total_reward}')
+            print(f'step {step}')
 
 
 #print(f"{env_id}")
@@ -83,13 +90,21 @@ print(f"Total Reward: {total_reward}")
 
 #fig = plt.figure()
 #plot = plt.matshow(data[0], fignum=0)
+plt.plot(ep_steps)
+plt.title('AC Forest Fire (∈=0.1,α=0.5)')
+plt.xlabel("Number of steps")
+plt.ylabel("Number of episodes")
+plt.savefig('Fig_22.png')
+plt.show()
 
-cmap = ListedColormap(['blue', 'green', 'red', 'yellow'])
-bounds = [-0.5, 0.5, 1.5, 2.5, 3.5] # Define the boundaries for each color
+
+cmap = ListedColormap(['black', 'green', 'red', 'yellow','blue'])
+bounds = [-0.5, 0.5, 1.5, 2.5, 3.5, 4.5] # Define the boundaries for each color
 norm = plt.matplotlib.colors.BoundaryNorm(bounds, cmap.N)
    
 fig, ax = plt.subplots()
 im = ax.imshow(data[0], cmap = cmap, norm = norm, animated = True)
+plt.title('AC (∈=0.1,α=0.5)')
 
 def init():
     plot.set_data(data[0])
@@ -100,10 +115,10 @@ def update(j):
     return [im]
     #plot.set_data(data[j])
     #return [plot]
-
+ 
 #anim = FuncAnimation(fig, update, init_func = init, frames=n_frames, interval = 500)
 anim = FuncAnimation(fig, update, frames=len(data), interval = 200, blit = True)
-anim.save("Test7.gif", writer = PillowWriter(fps = 5))
+anim.save("Test22.gif", writer = PillowWriter(fps = 5))
 
 plt.show()
 

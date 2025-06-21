@@ -1,5 +1,6 @@
 # GYMCA ignores
 *.gif
+*.png
 # gymca temporal files
 # For prototyping or gallery pics
 TMP*

@@ -67,6 +67,7 @@ class GridSpace(Space):
         initial_g = self.np_random.choice(
             a=[0,1], size=self.size, p=[0.2,0.8]
         ).reshape(self.shape)
+        print(initial_g)
         i_r = int(np.random.choice(self.shape[0],1))
         i_c = int(np.random.choice(self.shape[1],1))
         #initial_g[i_r,i_c] = 2

@@ -28,19 +28,31 @@ class ForestFireSarsaEnv(CAEnv):
     def initial_state(self):
         if self._resample_initial:
             #self.grid = self.grid_space.sample()
-            self.grid = self.grid_space.sample_det() # un inicio de fuego random
+            self.grid = self.grid_space.sample_det() # un inicio de fuego det
+            self.grid_initial = self.grid.copy()
             #print(self.grid)
             ca_params = np.array([self._p_fire, self._p_tree], dtype=TYPE_BOX)
             #pos = np.array([self.nrows // 2, self.ncols // 2]) 
             pos = np.array([self.nrows - 1, (self.ncols// 3) - 2]) # la posición del agente
-            pos_goal = np.array([1, self.ncols])
+            pos_goal = np.array([1 , self.ncols - 1])
             freeze = np.array(self._max_freeze)
             self.context = ca_params, pos, pos_goal, freeze
             
             #print(f'pos {pos} pos goal {pos_goal}')
 
             self._initial_state = self.grid, self.context
+        else:
+            self.grid = self.grid_initial.copy()
+            ca_params = np.array([self._p_fire, self._p_tree], dtype=TYPE_BOX)
+            pos = np.array([self.nrows - 1, (self.ncols// 3) - 1]) # la posición del agente
+            pos_goal = np.array([1 , self.ncols - 1])
+            self.grid[tuple(pos_goal)] = 4
+            freeze = np.array(self._max_freeze)
+            self.context = ca_params, pos, pos_goal, freeze
 
+            self._initial_state = self.grid, self.context
+
+        #print(self.grid)
         self._resample_initial = False
 
         return self._initial_state
@@ -73,8 +85,8 @@ class ForestFireSarsaEnv(CAEnv):
         #self._reward_per_tree = kwargs.get("reward_per_tree", 1.0)
         #self._reward_per_fire = kwargs.get("reward_per_fire", -1.0)
         self._reward_per_move = kwargs.get("reward_per_move", -1.0)
-        self._reward_reach = kwargs.get("reward_reach", 10)
-        self._reward_burned = kwargs.get("reward_per_move", -10.0)# grandee
+        self._reward_reach = kwargs.get("reward_reach", 20)
+        self._reward_burned = kwargs.get("reward_per_move", -20.0)# grandee
         
 
         # Cells
@@ -91,7 +103,7 @@ class ForestFireSarsaEnv(CAEnv):
 
         scale = (nrows + ncols) // 2
         #self._max_freeze = int(speed * scale) if freeze is None else freeze
-        self._max_freeze = int(0.3 * scale) if freeze is None else freeze
+        self._max_freeze = int(0.4 * scale) if freeze is None else freeze
         # For `MoveModify`
         self._action_sets = {
             "up": {up_left, up, up_right},
@@ -127,42 +139,30 @@ class ForestFireSarsaEnv(CAEnv):
         return render(self)
 
     def _award(self):
-        ncells = self.nrows * self.ncols
-        
-        dict_counts = self.count_cells(self.grid)
-
-        cell_counts = np.array(
-            [dict_counts[self._empty], dict_counts[self._tree], dict_counts[self._fire]]
-        )
-
-        cell_counts_relative = cell_counts / ncells
-
-        #reward_weights = np.array(
-        #[self._reward_per_empty, self._reward_per_tree, self._reward_per_fire]
-        #)
-        #reward_weights = np.array([self._reward_per_move, self._reward_burned])
-        #print(self._reward_per_move)
-        reward_weights = self._reward_per_move + self._reward_burned
-        #print(f'reward_weights {reward_weights}')
-
+        reward_weights = 0
+        if self._is_done():
+            reward_weights += self._reward_reach
+        if self._is_burned():
+            reward_weights += self._reward_burned
+            
+        reward_weights += self._reward_per_move
         #return np.dot(reward_weights, cell_counts_relative)
         return reward_weights
 
     def _is_done(self):
         _, position, position_goal, _ = self.context
-        #print(f'position {position} position goal {position_goal}')
         if  (position == position_goal).all():
-            print(f'pos {position} and {position_goal}position final')
+            print(f'LLEGO pos {position} and {position_goal}position final')
             return True
         else:
             return False
         
     def _is_burned(self):
         _, position, _, _ = self.context
-        
         value_grid_agent = self.grid[tuple(position)]
         
         if  value_grid_agent == 2:
+            #print(f'QUEMO position {position}')
             return True
         else:
             return False

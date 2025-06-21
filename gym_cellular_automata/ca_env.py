@@ -81,6 +81,18 @@ class CAEnv(ABC, gym.Env):
         obs = self.state = self.grid, self.context = self.initial_state
 
         return obs, self._report()
+    
+    def reset_same_env(self, *, seed: Optional[int] = None, options: Optional[dict] = None):
+        super().reset(seed=seed)
+
+        self.done = False
+        self.steps_elapsed = 0
+        self.reward_accumulated = 0.0
+        self.steps_beyond_done = 0
+        self._resample_initial = False
+        obs = self.state = self.grid, self.context = self.initial_state
+
+        return obs, self._report()
 
     def status(self):
         return {
