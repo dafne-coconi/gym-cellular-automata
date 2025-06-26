@@ -9,6 +9,7 @@ TMP*
 
 # VScode editor
 .vscode/
+.DS_Store
 # npm
 node_modules/
 package-lock.json
