@@ -7,7 +7,7 @@ from matplotlib.colors import ListedColormap
 #from gym_cellular_automata.forest_fire.bulldozer import bulldozer
 
 # benchmark mode
-env_id = gymca.envs[2]
+env_id = gymca.envs[2] # Sarsa env
 env = gym.make(env_id, render_mode="human")
 
 # prototype mode
@@ -31,6 +31,9 @@ n_actions = env.action_space.n
 
 Q = np.zeros((env.nrows, env.ncols, n_actions))
 
+num_done = 0
+num_burned = 0
+num_out_trh = 0
 def choose_action_greedy(state):
     if np.random.rand() < epsilon:
         return np.random.randint(n_actions)
@@ -81,7 +84,31 @@ for episode in range(episodes):
             print(f"truncated {truncated} or terminated {terminated}")
             print(f'total reward {total_reward}')
             print(f'step {step}')
+            if terminated:
+                num_done += 1
+            elif truncated:
+                num_burned += 1
+            else: 
+                num_out_trh += 1
+                
 
+num_total = num_out_trh + num_burned + num_done
+
+sizes = [num_burned/num_total, num_out_trh/num_total, num_done/num_total]
+labels = ['Burned', 'Out of threshold', 'Safe']
+
+# Create the pie chart
+plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+
+# Add a title
+plt.title('Success rate SARSA')
+
+# Ensure the circle is drawn as a circle
+plt.axis('equal') 
+
+# Display the chart
+plt.savefig('Piechart30.png')
+plt.show()
 
 #print(f"{env_id}")
 print(f"Total Steps: {step}")
@@ -91,10 +118,10 @@ print(f"Total Reward: {total_reward}")
 #fig = plt.figure()
 #plot = plt.matshow(data[0], fignum=0)
 plt.plot(ep_steps)
-plt.title('AC Forest Fire (∈=0.1,α=0.5)')
+plt.title('AC Forest Fire Sarsa (∈=0.1,α=0.5)')
 plt.xlabel("Number of steps")
 plt.ylabel("Number of episodes")
-plt.savefig('Fig_22.png')
+plt.savefig('Fig_30.png')
 plt.show()
 
 
@@ -118,7 +145,7 @@ def update(j):
  
 #anim = FuncAnimation(fig, update, init_func = init, frames=n_frames, interval = 500)
 anim = FuncAnimation(fig, update, frames=len(data), interval = 200, blit = True)
-anim.save("Test22.gif", writer = PillowWriter(fps = 5))
+anim.save("Test30.gif", writer = PillowWriter(fps = 5))
 
 plt.show()
 
